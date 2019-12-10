@@ -9,6 +9,11 @@ import org.springframework.web.method.HandlerMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * @date: 2019/12/10 15:23
+ * @author: hhong
+ * @description: 自定义token过滤拦截器
+ **/
 @Slf4j
 @Component
 public class AuthInterceptor extends BaseInterceptor {
@@ -16,7 +21,6 @@ public class AuthInterceptor extends BaseInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("--------authInterceptor-------");
         if (!(handler instanceof HandlerMethod)) {
             return true;
         }

@@ -32,6 +32,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
                 .paths(PathSelectors.any())
                 .build()
+               // .securitySchemes(security())
                 .globalOperationParameters(setHeaderToken());
     }
 
@@ -53,5 +54,10 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .build();
     }
 
+ /*   private List<ApiKey> security() {
+        return newArrayList(
+                new ApiKey("token", "token", "header")
+        );
+    }*/
 
 }

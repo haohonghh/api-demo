@@ -7,13 +7,12 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * @date: 2019/12/10 16:09
+ * @date: 2019/12/10 15:23
  * @author: hhong
- * @name:
- * @description:
+ * @description: 添加token拦截器
  **/
 @Configuration
-public class MyIntercrptor implements WebMvcConfigurer {
+public class TokenInterceptor implements WebMvcConfigurer {
 
     @Autowired
     private AuthInterceptor authInterceptor;
