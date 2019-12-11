@@ -118,7 +118,7 @@ public class Result<T> implements Serializable {
      * 无权限访问返回结果
      */
     public static Result<Object> noauth(String msg) {
-        return error(CommonConstant.BD_JEECG_NO_AUTHZ, msg);
+        return error(CommonConstant.BD_NO_AUTH_CODE, msg);
     }
 
     public static void validorError(Object data, String msg) {

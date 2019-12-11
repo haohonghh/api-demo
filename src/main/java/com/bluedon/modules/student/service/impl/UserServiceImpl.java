@@ -25,11 +25,11 @@ public class UserServiceImpl extends ServiceImpl<StudentDao, StudentEntity> impl
             i = this.baseMapper.insert(entity);
         }
 
-        return i == 1 ? Result.ok() : Result.error(CommonConstant.DELETE_FAILURE);
+        return i == 1 ? Result.ok(CommonConstant.SAVE_SUCCESS) : Result.error(CommonConstant.SAVE_FAILURE);
     }
 
     @Override
     public Result deleteStuById(String id) {
-        return this.baseMapper.deleteById(id) == 1 ? Result.ok() : Result.error(CommonConstant.SAVE_FAILURE);
+        return this.baseMapper.deleteById(id) == 1 ? Result.ok(CommonConstant.DELETE_SUCCESS) : Result.error(CommonConstant.DELETE_FAILURE);
     }
 }

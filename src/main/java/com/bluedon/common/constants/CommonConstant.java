@@ -11,11 +11,13 @@ public interface CommonConstant {
      * Server Success Code
      */
     public static final Integer BD_SERVER_OK_200 = 200;
-    
-    /**访问权限认证未通过 510*/
-    public static final Integer BD_JEECG_NO_AUTHZ=510;
 
-    public static final String BD_TOKEN_IS_NULL="TOKEN_IS_NULL";
+    /**
+     * 访问权限认证未通过 510
+     */
+    public static final Integer BD_NO_AUTH_CODE = 510;
+
+    public static final String BD_TOKEN_IS_NULL = "TOKEN_IS_NULL";
 
     /**
      * 状态(0无效1有效)
@@ -28,8 +30,17 @@ public interface CommonConstant {
     /**
      * 删除失败
      */
+    public static final String DELETE_SUCCESS = "删除成功";
+
+    /**
+     * 删除失败
+     */
     public static final String DELETE_FAILURE = "删除失败";
 
+    /**
+     * 保存失败
+     */
+    public static final String SAVE_SUCCESS = "保存成功";
     /**
      * 保存失败
      */

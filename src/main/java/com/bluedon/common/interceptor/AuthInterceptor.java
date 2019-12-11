@@ -34,7 +34,7 @@ public class AuthInterceptor extends BaseInterceptor {
         //获取token
         String accessToken = getAuthToken(request);
         if (StringUtils.isBlank(accessToken)) {
-            setResponse(request, response, CommonConstant.BD_JEECG_NO_AUTHZ, CommonConstant.BD_TOKEN_IS_NULL);
+            setResponse(request, response, CommonConstant.BD_NO_AUTH_CODE, CommonConstant.BD_TOKEN_IS_NULL);
             return false;
         }
 

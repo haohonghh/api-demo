@@ -16,4 +16,5 @@ public interface StudentService extends IService<StudentEntity> {
 
     Result deleteStuById(String id);
 
+
 }
