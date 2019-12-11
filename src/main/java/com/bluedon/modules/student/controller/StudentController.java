@@ -37,6 +37,7 @@ public class StudentController {
     private StudentService studentService;
 
 
+    @DisableAuth
     @ApiOperation(value = "获取学生列表", notes = "获取所有学生信息")
     @GetMapping(value = "/list")
     public Result<?> list(StudentEntity studentEntity, @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo, @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
@@ -44,14 +45,14 @@ public class StudentController {
         QueryWrapper<StudentEntity> queryWrapper = new QueryWrapper<>();
         //queryWrapper.eq("id",studentEntity.getId());
         IPage<StudentEntity> pageList = studentService.page(page, queryWrapper);
-        log.info("查询当前页：" + pageList.getCurrent());
+      /*  log.info("查询当前页：" + pageList.getCurrent());
         log.info("查询当前页数量：" + pageList.getSize());
         log.info("查询结果数量：" + pageList.getRecords().size());
-        log.info("数据总数：" + pageList.getTotal());
+        log.info("数据总数：" + pageList.getTotal());*/
         return Result.ok(pageList);
     }
 
-    @DisableAuth
+
     @GetMapping("/{id}")
     @ApiOperation(value = "根据id获取学生信息", notes = "根据id获取学生信息")
     public Result getById(@PathVariable("id") String id) {
