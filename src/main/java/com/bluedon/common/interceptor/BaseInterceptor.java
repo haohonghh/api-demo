@@ -17,7 +17,7 @@ public abstract class BaseInterceptor extends HandlerInterceptorAdapter {
 
 
     public void setResponse(HttpServletRequest request,
-                            HttpServletResponse response, String messageKey, String message) {
+                            HttpServletResponse response, Integer messageKey, String message) {
 
         response.setContentType("application/json;charset=UTF-8");
         try (Writer writer = response.getWriter()) {
@@ -34,7 +34,7 @@ public abstract class BaseInterceptor extends HandlerInterceptorAdapter {
     }
 
     public void setResponse(HttpServletRequest request,
-                            HttpServletResponse response, String messageKey) {
+                            HttpServletResponse response, Integer messageKey) {
         setResponse(request, response, messageKey, "OK");
 
     }

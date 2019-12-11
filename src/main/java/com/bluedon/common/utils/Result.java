@@ -56,7 +56,7 @@ public class Result<T> implements Serializable {
 
     public Result<T> success(String message) {
         this.message = message;
-        this.code = CommonConstant.SC_OK_200;
+        this.code = CommonConstant.BD_SERVER_OK_200;
         this.success = true;
         return this;
     }
@@ -65,7 +65,7 @@ public class Result<T> implements Serializable {
     public static Result<Object> ok() {
         Result<Object> r = new Result<Object>();
         r.setSuccess(true);
-        r.setCode(CommonConstant.SC_OK_200);
+        r.setCode(CommonConstant.BD_SERVER_OK_200);
         r.setMessage("成功");
         return r;
     }
@@ -73,7 +73,7 @@ public class Result<T> implements Serializable {
     public static Result<Object> ok(String msg) {
         Result<Object> r = new Result<Object>();
         r.setSuccess(true);
-        r.setCode(CommonConstant.SC_OK_200);
+        r.setCode(CommonConstant.BD_SERVER_OK_200);
         r.setMessage(msg);
         return r;
     }
@@ -81,7 +81,7 @@ public class Result<T> implements Serializable {
     public static Result<Object> ok(Object data) {
         Result<Object> r = new Result<Object>();
         r.setSuccess(true);
-        r.setCode(CommonConstant.SC_OK_200);
+        r.setCode(CommonConstant.BD_SERVER_OK_200);
         r.setResult(data);
         return r;
     }
@@ -89,13 +89,13 @@ public class Result<T> implements Serializable {
     public static Result<Object> error(Object data) {
         Result<Object> r = new Result<Object>();
         r.setSuccess(false);
-        r.setCode(CommonConstant.SC_INTERNAL_SERVER_ERROR_500);
+        r.setCode(CommonConstant.BD_SERVER_ERROR_500);
         r.setResult(data);
         return r;
     }
 
     public static Result<Object> error(String msg) {
-        return error(CommonConstant.SC_INTERNAL_SERVER_ERROR_500, msg);
+        return error(CommonConstant.BD_SERVER_ERROR_500, msg);
     }
 
     public static Result<Object> error(int code, String msg) {
@@ -109,7 +109,7 @@ public class Result<T> implements Serializable {
 
     public Result<T> error500(String message) {
         this.message = message;
-        this.code = CommonConstant.SC_INTERNAL_SERVER_ERROR_500;
+        this.code = CommonConstant.BD_SERVER_ERROR_500;
         this.success = false;
         return this;
     }
@@ -118,7 +118,7 @@ public class Result<T> implements Serializable {
      * 无权限访问返回结果
      */
     public static Result<Object> noauth(String msg) {
-        return error(CommonConstant.SC_JEECG_NO_AUTHZ, msg);
+        return error(CommonConstant.BD_JEECG_NO_AUTHZ, msg);
     }
 
     public static void validorError(Object data, String msg) {

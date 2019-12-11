@@ -1,6 +1,7 @@
 package com.bluedon.common.interceptor;
 
 import com.bluedon.common.annotation.DisableAuth;
+import com.bluedon.common.constants.CommonConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -33,7 +34,7 @@ public class AuthInterceptor extends BaseInterceptor {
         //获取token
         String accessToken = getAuthToken(request);
         if (StringUtils.isBlank(accessToken)) {
-            setResponse(request, response, "ACCESS_TOKEN_IS_NULL", "Error: token is null");
+            setResponse(request, response, CommonConstant.BD_JEECG_NO_AUTHZ, CommonConstant.BD_TOKEN_IS_NULL);
             return false;
         }
 
