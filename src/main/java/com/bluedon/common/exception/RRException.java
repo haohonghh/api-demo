@@ -1,6 +1,6 @@
 package com.bluedon.common.exception;
 
-import com.bluedon.common.utils.Return;
+import com.bluedon.common.utils.Result;
 import lombok.Data;
 
 /**
@@ -10,9 +10,9 @@ import lombok.Data;
 public class RRException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-    private Return r;
+    private Result r;
 
-    public RRException(Return r) {
+    public RRException(Result r) {
         this.r = r;
     }
 

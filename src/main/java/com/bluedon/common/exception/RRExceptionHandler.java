@@ -19,6 +19,6 @@ public class RRExceptionHandler {
      */
     @ExceptionHandler(RRException.class)
     public Object handle(RRException e) {
-        return e.getR();
+        return e.getR().getResult();
     }
 }

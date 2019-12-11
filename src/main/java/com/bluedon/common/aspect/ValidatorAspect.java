@@ -1,6 +1,7 @@
 package com.bluedon.common.aspect;
 
-import com.bluedon.common.utils.Return;
+import com.bluedon.common.constants.CommonConstant;
+import com.bluedon.common.utils.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -12,6 +13,11 @@ import org.springframework.validation.ObjectError;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @date: 2019/12/9 11:23
+ * @author: hhong
+ * @description: 输入参数校验。结合实体上注解使用
+ **/
 @Slf4j
 @Aspect
 @Component
@@ -27,7 +33,7 @@ public class ValidatorAspect {
                     for (ObjectError error : result.getAllErrors()) {
                         errors.add(error.getDefaultMessage());
                     }
-                    Return.error(errors, "error");
+                    Result.validorError(errors, CommonConstant.VALIDATOR_FAILURE);
                 }
             }
         }
