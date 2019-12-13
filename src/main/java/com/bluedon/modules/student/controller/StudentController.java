@@ -31,7 +31,7 @@ import java.util.List;
  **/
 @RestController
 @RequestMapping("/student")
-@Api("学生管理测试接口")
+@Api(value="demo接口",tags={"demo接口"})
 @Slf4j
 public class StudentController {
 
