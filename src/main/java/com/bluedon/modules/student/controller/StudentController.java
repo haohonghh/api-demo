@@ -113,7 +113,7 @@ public class StudentController {
      */
     @ApiOperation(value = "多表按条件查询demo", notes = "多表按条件查询demo")
     @GetMapping(value = "/selectListByParms")
-    public Result selectListByParms(StudentVo vo) {
+    public Result selectListByParms(@ApiParam(name = "学生对象", value = "传入json格式") StudentVo vo) {
         List<StudentVo> studentVos = studentService.selectListByParms(vo);
         return Result.ok(studentVos);
     }
