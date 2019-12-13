@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  * @date: 2019/12/13 14:39
  * @author: hhong
  * @name:
- * @description: 读取自定义properteis文件
+ * @description: 读取自定义properteis文件测试
  **/
 @RunWith(SpringRunner.class)
 @SpringBootTest

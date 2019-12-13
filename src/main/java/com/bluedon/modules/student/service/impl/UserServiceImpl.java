@@ -1,6 +1,5 @@
 package com.bluedon.modules.student.service.impl;
 
-
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bluedon.common.constants.CommonConstant;
 import com.bluedon.common.utils.Result;
@@ -10,7 +9,11 @@ import com.bluedon.modules.student.service.StudentService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
-
+/**
+ * @date: 2019/12/9 11:23
+ * @author: hhong
+ * @description: 学生Service实现类
+ **/
 @Service("studentService")
 public class UserServiceImpl extends ServiceImpl<StudentDao, StudentEntity> implements StudentService {
 

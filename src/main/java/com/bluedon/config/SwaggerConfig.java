@@ -18,6 +18,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @date: 2019/12/10 15:23
+ * @author: hhong
+ * @description: swagger2配置
+ **/
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig implements WebMvcConfigurer {
@@ -32,7 +37,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
                 .paths(PathSelectors.any())
                 .build()
-               // .securitySchemes(security())
+                // .securitySchemes(security())
                 .globalOperationParameters(setHeaderToken());
     }
 

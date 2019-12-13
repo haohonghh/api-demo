@@ -29,6 +29,7 @@ public class FileUtil {
 
     /**
      * 上传文件
+     *
      * @param request
      * @param response
      * @return
@@ -69,6 +70,7 @@ public class FileUtil {
     /**
      * 下载文件
      * 请求地址：http://localhost:8080/common/download/user/20190119/e1fe9925bc315c60addea1b98eb1cb1349547719_1547866868179.jpg
+     *
      * @param request
      * @param response
      * @throws Exception

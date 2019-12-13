@@ -6,8 +6,10 @@ import sun.misc.BASE64Encoder;
 import java.io.*;
 
 /**
- * 图片和base64互相转换
- */
+ * @date: 2019/12/10 15:23
+ * @author: hhong
+ * @description: 图片和base64互相转换工具类
+ **/
 public class Base64Util {
 
     /**
@@ -26,7 +28,7 @@ public class Base64Util {
         try {
             // 解密
             byte[] b = decoder.decodeBuffer(imgStr);
-        // 处理数据
+            // 处理数据
             for (int i = 0; i < b.length; ++i) {
                 if (b[i] < 0) {
                     b[i] += 256;
@@ -43,10 +45,10 @@ public class Base64Util {
     }
 
     /**
+     * @return
      * @Description: 根据图片地址转换为base64编码字符串
      * @Author:
      * @CreateTime:
-     * @return
      */
     public static String getImageStr(String imgFile) {
         InputStream inputStream = null;

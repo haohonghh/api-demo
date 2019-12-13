@@ -8,6 +8,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @date: 2019/12/13 14:33
+ * @author: hhong
+ * @description: redis工具类
+ **/
 @Component
 public class RedisUtil {
 

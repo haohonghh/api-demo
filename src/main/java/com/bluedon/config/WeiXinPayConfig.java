@@ -7,8 +7,10 @@ import org.springframework.stereotype.Component;
 
 
 /**
- * 测试如何优雅读取自定义配置文件
- */
+ * @date: 2019/12/10 15:23
+ * @author: hhong
+ * @description: 测试读取自定义配置文件
+ **/
 @PropertySource(value = {"classpath:weixinpay.properties"})
 @ConfigurationProperties(prefix = "weixinpay")
 @Component

@@ -12,6 +12,11 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @date: 2019/12/10 16:23
+ * @author: hhong
+ * @description: 自定义拦截器基类
+ **/
 @Slf4j
 public abstract class BaseInterceptor extends HandlerInterceptorAdapter {
 

@@ -7,10 +7,12 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.DispatcherType;
 
+
 /**
- * Filter配置
- *
- */
+ * @date: 2019/12/13 10:23
+ * @author: hhong
+ * @description: Filter配置
+ **/
 @Configuration
 public class FilterConfig {
 

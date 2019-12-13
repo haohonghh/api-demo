@@ -1,5 +1,11 @@
 package com.bluedon.common.constants;
 
+
+/**
+ * @date: 2019/12/13 10:23
+ * @author: hhong
+ * @description: 常量
+ **/
 public interface CommonConstant {
 
     /**

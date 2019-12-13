@@ -1,4 +1,3 @@
-
 package com.bluedon.modules.student.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;

@@ -1,6 +1,5 @@
 package com.bluedon.generator;
 
-
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -15,8 +14,11 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * mybatis代码生成器
- */
+ * @date: 2019/12/13 14:39
+ * @author: hhong
+ * @name:
+ * @description: mybatis-plus代码生成器
+ **/
 public class CodeGenerator {
 
     /**
@@ -63,7 +65,7 @@ public class CodeGenerator {
         gc.setXmlName("%sDao");
         gc.setServiceName("%sService");
         gc.setServiceImplName("%sServiceImpl");
-      //  gc.setControllerName("%sController");
+        //  gc.setControllerName("%sController");
         mpg.setGlobalConfig(gc);
         System.out.println(projectPath);
         // 数据源配置
@@ -113,9 +115,9 @@ public class CodeGenerator {
         };
 
         // 如果模板引擎是 freemarker
-      //  String templatePath = "/templates/mapper.xml.ftl";
+        //  String templatePath = "/templates/mapper.xml.ftl";
         // 如果模板引擎是 velocity
-         String templatePath = "/templates/mapper.xml.vm";
+        String templatePath = "/templates/mapper.xml.vm";
 
         // 自定义输出配置
         List<FileOutConfig> focList = new ArrayList<>();
@@ -124,7 +126,7 @@ public class CodeGenerator {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
-                return projectPath+ "/src/main/resources/mapper/" + pc.getModuleName()
+                return projectPath + "/src/main/resources/mapper/" + pc.getModuleName()
                         + "/" + tableInfo.getEntityName() + "Dao" + StringPool.DOT_XML;
             }
         });

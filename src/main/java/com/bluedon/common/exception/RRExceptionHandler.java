@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 /**
- * 校验错误拦截处理
- */
+ * @date: 2019/12/13 11:26
+ * @author: hhong
+ * @description: 校验错误拦截处理
+ **/
 @Slf4j
 @RestControllerAdvice
 public class RRExceptionHandler {
@@ -34,15 +36,15 @@ public class RRExceptionHandler {
     }
 
     @ExceptionHandler(DuplicateKeyException.class)
-    public Result<?> handleDuplicateKeyException(DuplicateKeyException e){
+    public Result<?> handleDuplicateKeyException(DuplicateKeyException e) {
         log.error(e.getMessage(), e);
         return Result.error("数据库中已存在该记录");
     }
 
     @ExceptionHandler(Exception.class)
-    public Result<?> handleException(Exception e){
+    public Result<?> handleException(Exception e) {
         log.error(e.getMessage(), e);
-        return Result.error("操作失败，"+e.getMessage());
+        return Result.error("操作失败，" + e.getMessage());
     }
 
 
