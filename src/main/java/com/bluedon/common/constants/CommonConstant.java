@@ -19,6 +19,8 @@ public interface CommonConstant {
 
     public static final String BD_TOKEN_IS_NULL = "TOKEN_IS_NULL";
 
+    public static final String BD_ERROR_TOKEN = "ERROR_TOKEN";
+
     /**
      * 状态(0无效1有效)
      */

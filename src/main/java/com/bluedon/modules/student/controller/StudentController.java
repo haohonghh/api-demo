@@ -40,7 +40,7 @@ public class StudentController {
     @DisableAuth
     @ApiOperation(value = "获取学生列表", notes = "获取所有学生信息")
     @GetMapping(value = "/list")
-    public Result<?> list(StudentEntity studentEntity, @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo, @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
+    public Result<?> list(@RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo, @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
         Page<StudentEntity> page = new Page<>(pageNo, pageSize);
         QueryWrapper<StudentEntity> queryWrapper = new QueryWrapper<>();
         //queryWrapper.eq("id",studentEntity.getId());

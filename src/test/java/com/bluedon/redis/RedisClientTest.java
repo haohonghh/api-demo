@@ -22,12 +22,14 @@ public class RedisClientTest {
     @Autowired
     private RedisUtil redisUtil;
 
+
     // String get/set测试
     @Test
     public void redisStrGetSet() {
         try {
            // redisUtil.set("test_key1","测试测试");
-           String val= redisUtil.get("test_key1");
+          //  redisUtil.set("test111","aaa",60);
+            String val = redisUtil.get("test111");
            System.out.println(val);
         } catch (Exception e) {
             e.printStackTrace();
