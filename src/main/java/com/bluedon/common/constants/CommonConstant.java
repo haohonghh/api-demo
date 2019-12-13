@@ -6,7 +6,7 @@ package com.bluedon.common.constants;
  * @author: hhong
  * @description: 常量
  **/
-public interface CommonConstant {
+public class  CommonConstant {
 
     /**
      * Server Error Code
