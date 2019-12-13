@@ -41,4 +41,7 @@ public class StudentEntity implements Serializable {
     @ApiModelProperty(value = "用户名", name = "userName", example = "hhong", required = true)
     private String userName;
 
+    @ApiModelProperty(value = "班级id", name = "classesId", example = "cc8b4c08a511aa101bae5d38ar1a6326")
+    private String classesId;
+
 }

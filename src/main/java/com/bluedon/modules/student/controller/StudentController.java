@@ -8,6 +8,7 @@ import com.bluedon.common.constants.CommonConstant;
 import com.bluedon.common.utils.FileUtil;
 import com.bluedon.common.utils.Result;
 import com.bluedon.modules.student.entity.StudentEntity;
+import com.bluedon.modules.student.entity.StudentVo;
 import com.bluedon.modules.student.service.StudentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @date: 2019/12/9 11:23
@@ -37,18 +39,12 @@ public class StudentController {
     private StudentService studentService;
 
 
-    @DisableAuth
     @ApiOperation(value = "获取学生列表", notes = "获取所有学生信息")
     @GetMapping(value = "/list")
     public Result<?> list(@RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo, @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
         Page<StudentEntity> page = new Page<>(pageNo, pageSize);
         QueryWrapper<StudentEntity> queryWrapper = new QueryWrapper<>();
-        //queryWrapper.eq("id",studentEntity.getId());
         IPage<StudentEntity> pageList = studentService.page(page, queryWrapper);
-      /*  log.info("查询当前页：" + pageList.getCurrent());
-        log.info("查询当前页数量：" + pageList.getSize());
-        log.info("查询结果数量：" + pageList.getRecords().size());
-        log.info("数据总数：" + pageList.getTotal());*/
         return Result.ok(pageList);
     }
 
@@ -84,6 +80,44 @@ public class StudentController {
         boolean b = this.studentService.removeByIds(Arrays.asList(ids.split(",")));
         return b ? Result.ok(CommonConstant.DELETE_SUCCESS) : Result.error(CommonConstant.DELETE_FAILURE);
     }
+
+
+    /**
+     * 分页多表查询demo
+     *
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    @ApiOperation(value = "分页多表查询demo", notes = "分页多表查询demo")
+    @GetMapping(value = "/selectPageVo")
+    public Result list1(@RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo, @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
+        IPage<StudentVo> pageList = studentService.selectPageVo(pageNo, pageSize);
+        return Result.ok(pageList);
+    }
+
+    /**
+     * 多表查询demo
+     *
+     */
+    @ApiOperation(value = "多表查询demo", notes = "多表查询demo")
+    @GetMapping(value = "/selectList")
+    public Result list2() {
+        List<StudentVo> studentVos = studentService.selectList();
+        return Result.ok(studentVos);
+    }
+
+    /**
+     * 多表查询demo
+     *
+     */
+    @ApiOperation(value = "多表按条件查询demo", notes = "多表按条件查询demo")
+    @GetMapping(value = "/selectListByParms")
+    public Result selectListByParms(StudentVo vo) {
+        List<StudentVo> studentVos = studentService.selectListByParms(vo);
+        return Result.ok(studentVos);
+    }
+
 
     @Autowired
     private FileUtil fileUtil;
