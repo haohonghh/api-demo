@@ -39,6 +39,7 @@ public class StudentController {
     private StudentService studentService;
 
 
+    @DisableAuth
     @ApiOperation(value = "获取学生列表", notes = "获取所有学生信息")
     @GetMapping(value = "/list")
     public Result<?> list(@RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo, @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
