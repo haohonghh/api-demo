@@ -60,6 +60,6 @@ public class  CommonConstant {
     /**
      * 校验失败
      */
-    public static final String VALIDATOR_FAILURE = "校验失败";
+    public static final String VALIDATOR_FAILURE = "参数校验失败";
 
 }

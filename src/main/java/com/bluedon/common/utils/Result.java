@@ -128,4 +128,5 @@ public class Result<T> implements Serializable {
         r.setMessage(msg);
         throw new RRException(r);
     }
+
 }

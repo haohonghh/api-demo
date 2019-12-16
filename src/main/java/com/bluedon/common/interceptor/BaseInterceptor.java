@@ -1,6 +1,7 @@
 package com.bluedon.common.interceptor;
 
 import com.alibaba.fastjson.JSON;
+import com.bluedon.common.utils.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -9,8 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @date: 2019/12/10 16:23
@@ -21,34 +20,23 @@ import java.util.Map;
 public abstract class BaseInterceptor extends HandlerInterceptorAdapter {
 
 
-    public void setResponse(HttpServletRequest request,
-                            HttpServletResponse response, Integer messageKey, String message) {
+    public void setResponse(HttpServletRequest request, HttpServletResponse response, Result result) {
 
         response.setContentType("application/json;charset=UTF-8");
         try (Writer writer = response.getWriter()) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("code", messageKey);
-            resultMap.put("message", message);
-
-            logger(request, resultMap);
-            JSON.writeJSONString(writer, resultMap);
+            logger(request, result);
+            JSON.writeJSONString(writer, result);
             writer.flush();
         } catch (IOException e) {
             log.error("respose 设置操作异常：" + e);
         }
     }
 
-    public void setResponse(HttpServletRequest request,
-                            HttpServletResponse response, Integer messageKey) {
-        setResponse(request, response, messageKey, "OK");
-
-    }
-
 
     /**
-     * 记录日志
+     * 日志打印
      */
-    private void logger(HttpServletRequest request, Map<String, Object> resultMap) {
+    private void logger(HttpServletRequest request, Result result) {
         StringBuffer msg = new StringBuffer();
         msg.append("异常拦截日志:");
         msg.append("[uri:").append(request.getRequestURI()).append("]");
@@ -69,7 +57,7 @@ public abstract class BaseInterceptor extends HandlerInterceptorAdapter {
             }
             msg.append("]");
         }
-        msg.append(JSON.toJSONString(resultMap));
+        msg.append(JSON.toJSONString(result));
 
         log.warn(msg.toString());
     }

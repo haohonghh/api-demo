@@ -4,6 +4,7 @@ import com.bluedon.common.annotation.DisableAuth;
 import com.bluedon.common.constants.CommonConstant;
 import com.bluedon.common.utils.IPUtil;
 import com.bluedon.common.utils.RedisUtil;
+import com.bluedon.common.utils.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,15 +41,15 @@ public class AuthInterceptor extends BaseInterceptor {
         String accessToken = getAuthToken(request);
         // token为空，直接拦截返回
         if (StringUtils.isBlank(accessToken)) {
-            setResponse(request, response, CommonConstant.BD_NO_AUTH_CODE, CommonConstant.BD_TOKEN_IS_NULL);
+            setResponse(request, response, Result.error(CommonConstant.BD_NO_AUTH_CODE, CommonConstant.BD_TOKEN_IS_NULL));
             return false;
         }
 
         // 3.判断token是否正确
         String clientIp = IPUtil.getIP(request);
-        String token = redisUtil.hget(CommonConstant.BD_REDIS_TOKEN_KEY,clientIp);
-        if (StringUtils.isEmpty(token)||!token.equals(accessToken)) {
-            setResponse(request, response, CommonConstant.BD_NO_AUTH_CODE, CommonConstant.BD_ERROR_TOKEN);
+        String token = redisUtil.hget(CommonConstant.BD_REDIS_TOKEN_KEY, clientIp);
+        if (StringUtils.isEmpty(token) || !token.equals(accessToken)) {
+            setResponse(request, response, Result.error(CommonConstant.BD_NO_AUTH_CODE, CommonConstant.BD_ERROR_TOKEN));
             return false;
         }
 
@@ -66,10 +67,10 @@ public class AuthInterceptor extends BaseInterceptor {
      * @return 返回token
      */
     private String getAuthToken(HttpServletRequest request) {
-        String token = request.getHeader("accessToken");
+        String token = request.getHeader(CommonConstant.BD_REDIS_TOKEN_KEY);
 
         if (token == null) {
-            token = request.getParameter("accessToken");
+            token = request.getParameter(CommonConstant.BD_REDIS_TOKEN_KEY);
         }
         return token;
     }

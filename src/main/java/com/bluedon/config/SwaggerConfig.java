@@ -1,5 +1,6 @@
 package com.bluedon.config;
 
+import com.bluedon.common.constants.CommonConstant;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,7 +45,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
     private List<Parameter> setHeaderToken() {
         ParameterBuilder tokenPar = new ParameterBuilder();
         List<Parameter> pars = new ArrayList<>();
-        tokenPar.name("accessToken").description("accessToken").modelRef(new ModelRef("string")).parameterType("header").required(false).build();
+        tokenPar.name(CommonConstant.BD_REDIS_TOKEN_KEY).description(CommonConstant.BD_REDIS_TOKEN_KEY).modelRef(new ModelRef("string")).parameterType("header").required(false).build();
         pars.add(tokenPar.build());
         return pars;
     }
