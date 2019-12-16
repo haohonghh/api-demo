@@ -28,6 +28,9 @@ public class StudentVo {
     @ApiModelProperty(value = "用户名", name = "userName", example = "userName")
     private String userName;
 
+    @ApiModelProperty(value = "邮箱", name = "email", example = "abcd123@qq.com")
+    private String email;
+
     @ApiModelProperty(value = "班级名称", name = "className", example = "className")
     private String className;
 

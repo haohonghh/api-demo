@@ -4,19 +4,19 @@
 <mapper namespace="com.bluedon.modules.student.dao.StudentDao">
 
     <select id="selectPageVo" resultType="com.bluedon.modules.student.entity.StudentVo">
-        select str.id,str.age,str.password,str.user_name,
+        select str.id,str.age,str.password,str.user_name,str.email,
         cla.class_name,cla.class_no
         from t_student str left join t_classes cla on str.classes_id = cla.id
     </select>
 
     <select id="selectList" resultType="com.bluedon.modules.student.entity.StudentVo">
-        select str.id,str.age,str.password,str.user_name,
+        select str.id,str.age,str.password,str.user_name,str.email,
         cla.class_name,cla.class_no
         from t_student str left join t_classes cla on str.classes_id = cla.id
     </select>
 
     <select id="selectListByParms" resultType="com.bluedon.modules.student.entity.StudentVo">
-        select str.id,str.age,str.password,str.user_name,
+        select str.id,str.age,str.password,str.user_name,str.email,
         cla.class_name,cla.class_no
         from t_student str left join t_classes cla on str.classes_id = cla.id
         <where>

@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -34,6 +36,7 @@ public class StudentEntity implements Serializable {
     private int age;
 
     @NotBlank(message = "密码不能为空")
+    @Length(max = 20,message = "密码不能大于20个字符")
     @ApiModelProperty(value = "密码", name = "password", example = "pwd123", required = true)
     private String password;
 
@@ -43,5 +46,9 @@ public class StudentEntity implements Serializable {
 
     @ApiModelProperty(value = "班级id", name = "classesId", example = "cc8b4c08a511aa101bae5d38ar1a6326")
     private String classesId;
+
+    @Email
+    @ApiModelProperty(value = "邮箱", name = "email", example = "abcd123@qq.com")
+    private String email;
 
 }
