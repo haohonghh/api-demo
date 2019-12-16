@@ -11,12 +11,15 @@ import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
 import springfox.documentation.service.Parameter;
+import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -30,16 +33,17 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
     @Bean
     public Docket createRestApi() {
-
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
+                //此包路径下的类，才生成接口文档
+                .apis(RequestHandlerSelectors.basePackage("com.bluedon.modules"))
                 //加了ApiOperation注解的类，才生成接口文档
                 .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
                 .paths(PathSelectors.any())
                 .build()
-                // .securitySchemes(security())
-                .globalOperationParameters(setHeaderToken());
+                .securitySchemes(Collections.singletonList(securityScheme()));
+        //.globalOperationParameters(setHeaderToken());
     }
 
     private List<Parameter> setHeaderToken() {
@@ -50,20 +54,26 @@ public class SwaggerConfig implements WebMvcConfigurer {
         return pars;
     }
 
+    @Bean
+    SecurityScheme securityScheme() {
+        return new ApiKey(CommonConstant.BD_REDIS_TOKEN_KEY, CommonConstant.BD_REDIS_TOKEN_KEY, "header");
+    }
+
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("bluedon-api")
-                .description("bluedon-api文档")
-                .termsOfServiceUrl("https://www.baidu.com")
-                .version("3.0.0")
+                 //大标题
+				.title("bluedon-api")
+                // 版本号
+                .version("1.0")
+                // 描述
+                .description("bluedon-api接口文档")
+                // 作者
+                .contact("研发中心-安全管控")
+                .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
                 .build();
+
     }
 
- /*   private List<ApiKey> security() {
-        return newArrayList(
-                new ApiKey("token", "token", "header")
-        );
-    }*/
 
 }
