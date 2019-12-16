@@ -4,7 +4,6 @@ import com.bluedon.common.constants.CommonConstant;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -29,7 +28,7 @@ import java.util.List;
  **/
 @Configuration
 @EnableSwagger2
-public class SwaggerConfig implements WebMvcConfigurer {
+public class SwaggerConfig {
 
     @Bean
     public Docket createRestApi() {
@@ -62,8 +61,8 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                 //大标题
-				.title("bluedon-api")
+                //大标题
+                .title("bluedon-api")
                 // 版本号
                 .version("1.0")
                 // 描述
