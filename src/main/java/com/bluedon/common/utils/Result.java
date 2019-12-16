@@ -30,7 +30,7 @@ public class Result<T> implements Serializable {
      * 返回处理消息
      */
     @ApiModelProperty(value = "返回处理消息")
-    private String message = "操作成功！";
+    private String message = "操作成功!";
 
     /**
      * 返回代码
@@ -88,6 +88,7 @@ public class Result<T> implements Serializable {
 
     public static Result<Object> error(Object data) {
         Result<Object> r = new Result<Object>();
+        r.setMessage("操作失败!");
         r.setSuccess(false);
         r.setCode(CommonConstant.BD_SERVER_ERROR_500);
         r.setResult(data);
@@ -112,21 +113,6 @@ public class Result<T> implements Serializable {
         this.code = CommonConstant.BD_SERVER_ERROR_500;
         this.success = false;
         return this;
-    }
-
-    /**
-     * 无权限访问返回结果
-     */
-    public static Result<Object> noauth(String msg) {
-        return error(CommonConstant.BD_NO_AUTH_CODE, msg);
-    }
-
-    public static void validorError(Object data, String msg) {
-        Result r = new Result();
-        r.setCode(500);
-        r.setResult(data);
-        r.setMessage(msg);
-        throw new RRException(r);
     }
 
 }

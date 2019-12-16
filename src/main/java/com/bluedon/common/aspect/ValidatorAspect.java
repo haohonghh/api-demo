@@ -1,6 +1,7 @@
 package com.bluedon.common.aspect;
 
 import com.bluedon.common.constants.CommonConstant;
+import com.bluedon.common.exception.RRException;
 import com.bluedon.common.utils.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -33,7 +34,7 @@ public class ValidatorAspect {
                     for (ObjectError error : result.getAllErrors()) {
                         errors.add(error.getDefaultMessage());
                     }
-                    Result.validorError(errors, CommonConstant.VALIDATOR_FAILURE);
+                    throw new RRException(Result.error(errors));
                 }
             }
         }

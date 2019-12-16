@@ -19,15 +19,14 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 public class RRExceptionHandler {
 
     /**
-     * 校验错误拦截处理
-     *
-     * @param e 错误信息集合
-     * @return 错误信息
+     * 自定义异常拦截处理
      */
     @ExceptionHandler(RRException.class)
-    public Object handle(RRException e) {
-        return e.getR().getResult();
+    public Result<?> handleRRException(RRException e){
+        log.error(e.getR().getMessage());
+        return e.getR();
     }
+
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public Result<?> handlerNoFoundException(Exception e) {

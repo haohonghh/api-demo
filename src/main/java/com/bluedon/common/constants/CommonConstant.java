@@ -6,7 +6,7 @@ package com.bluedon.common.constants;
  * @author: hhong
  * @description: 常量
  **/
-public class  CommonConstant {
+public class CommonConstant {
     /**
      * 状态(0无效1有效)
      */
@@ -38,7 +38,7 @@ public class  CommonConstant {
 
     public static final String BD_TOKEN_IS_NULL = "TOKEN_IS_NULL";
 
-    public static final String BD_ERROR_TOKEN = "ERROR_TOKEN";
+    public static final String BD_TOKEN_IS_ERROR = "TOKEN_IS_ERROR";
 
     /**
      * redis token key

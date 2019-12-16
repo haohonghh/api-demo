@@ -2,6 +2,7 @@ package com.bluedon.common.interceptor;
 
 import com.bluedon.common.annotation.DisableAuth;
 import com.bluedon.common.constants.CommonConstant;
+import com.bluedon.common.exception.RRException;
 import com.bluedon.common.utils.IPUtil;
 import com.bluedon.common.utils.RedisUtil;
 import com.bluedon.common.utils.Result;
@@ -10,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  **/
 @Slf4j
 @Component
-public class AuthInterceptor extends BaseInterceptor {
+public class AuthInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
     private RedisUtil redisUtil;
@@ -41,16 +43,15 @@ public class AuthInterceptor extends BaseInterceptor {
         String accessToken = getAuthToken(request);
         // token为空，直接拦截返回
         if (StringUtils.isBlank(accessToken)) {
-            setResponse(request, response, Result.error(CommonConstant.BD_NO_AUTH_CODE, CommonConstant.BD_TOKEN_IS_NULL));
-            return false;
+            throw new RRException(Result.error(CommonConstant.BD_NO_AUTH_CODE, CommonConstant.BD_TOKEN_IS_NULL));
         }
 
         // 3.判断token是否正确
         String clientIp = IPUtil.getIP(request);
+        log.info("request ip>>>>>>>>>>" + clientIp);
         String token = redisUtil.hget(CommonConstant.BD_REDIS_TOKEN_KEY, clientIp);
         if (StringUtils.isEmpty(token) || !token.equals(accessToken)) {
-            setResponse(request, response, Result.error(CommonConstant.BD_NO_AUTH_CODE, CommonConstant.BD_ERROR_TOKEN));
-            return false;
+            throw new RRException(Result.error(CommonConstant.BD_NO_AUTH_CODE, CommonConstant.BD_TOKEN_IS_ERROR));
         }
 
         return true;
