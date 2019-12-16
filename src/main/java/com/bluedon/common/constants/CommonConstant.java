@@ -7,6 +7,19 @@ package com.bluedon.common.constants;
  * @description: 常量
  **/
 public class  CommonConstant {
+    /**
+     * 状态(0无效1有效)
+     */
+    public static final String STATUS_0 = "0";
+
+    public static final String STATUS_1 = "1";
+
+    /**
+     * 成功/失败
+     */
+    public static final String SUCCESS = "success";
+
+    public static final String ERROR = "error";
 
     /**
      * Server Error Code
@@ -27,16 +40,10 @@ public class  CommonConstant {
 
     public static final String BD_ERROR_TOKEN = "ERROR_TOKEN";
 
-    //redis token key
-    public static final String BD_REDIS_TOKEN_KEY = "token";
-
     /**
-     * 状态(0无效1有效)
+     * redis token key
      */
-    public static final String STATUS_0 = "0";
-
-    public static final String STATUS_1 = "1";
-
+    public static final String BD_REDIS_TOKEN_KEY = "token";
 
     /**
      * 删除失败
