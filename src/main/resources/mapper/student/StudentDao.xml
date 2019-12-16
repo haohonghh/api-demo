@@ -9,12 +9,6 @@
         from t_student str left join t_classes cla on str.classes_id = cla.id
     </select>
 
-    <select id="selectList" resultType="com.bluedon.modules.student.entity.StudentVo">
-        select str.id,str.age,str.password,str.user_name,str.email,
-        cla.class_name,cla.class_no
-        from t_student str left join t_classes cla on str.classes_id = cla.id
-    </select>
-
     <select id="selectListByParms" resultType="com.bluedon.modules.student.entity.StudentVo">
         select str.id,str.age,str.password,str.user_name,str.email,
         cla.class_name,cla.class_no
@@ -28,6 +22,15 @@
             and str.user_name = #{userName}
         </if>
         </where>
+    </select>
+
+    <sql id="multDemoField">
+        str.id,str.age,str.password,str.user_name,str.email,cla.class_name,cla.class_no
+    </sql>
+
+    <select id="selectList" resultType="com.bluedon.modules.student.entity.StudentVo">
+        select <include refid="multDemoField"/>
+        from t_student str left join t_classes cla on str.classes_id = cla.id
     </select>
 
 </mapper>
