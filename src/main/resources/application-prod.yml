@@ -4,7 +4,7 @@ spring:
         type: com.alibaba.druid.pool.DruidDataSource
         druid:
             driver-class-name: org.postgresql.Driver
-            url: jdbc:postgresql://localhost:5432/testdb1?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+            url: jdbc:postgresql://172.16.110.242:5432/testdb1?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
             username: postgres
             password: root
             initial-size: 10
@@ -13,12 +13,17 @@ spring:
             max-wait: 60000
             pool-prepared-statements: true
             max-pool-prepared-statement-per-connection-size: 20
+            #在空闲连接回收器线程运行期间休眠的时间值,以毫秒为单位.如果设置为非正数,则不运行空闲连接回收器线程
             time-between-eviction-runs-millis: 60000
+            #连接在池中保持空闲而不被空闲连接回收器线程,(如果有)回收的最小时间值，单位毫秒
             min-evictable-idle-time-millis: 300000
             #Oracle需要打开注释
             #validation-query: SELECT 1 FROM DUAL
+            #指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除
             test-while-idle: true
+            #指明是否在从池中取出连接前进行检验,如果检验失败,则从池中去除连接并尝试取出另一个.
             test-on-borrow: false
+            #指明是否在归还到池中前进行检验
             test-on-return: false
             stat-view-servlet:
                 enabled: true
