@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bluedon.common.annotation.DisableAuth;
 import com.bluedon.common.constants.CommonConstant;
 import com.bluedon.common.utils.FileUtil;
-import com.bluedon.common.utils.IPUtil;
 import com.bluedon.common.utils.Result;
 import com.bluedon.modules.student.entity.StudentEntity;
 import com.bluedon.modules.student.entity.StudentVo;
@@ -32,7 +31,7 @@ import java.util.List;
  **/
 @RestController
 @RequestMapping("/student")
-@Api(value="demo接口",tags={"demo接口"})
+@Api(value = "demo接口", tags = {"demo接口"})
 @Slf4j
 public class StudentController {
 
@@ -104,7 +103,6 @@ public class StudentController {
 
     /**
      * 多表查询demo
-     *
      */
     @ApiOperation(value = "多表查询demo", notes = "多表查询demo")
     @GetMapping(value = "/selectList")
@@ -115,7 +113,6 @@ public class StudentController {
 
     /**
      * 多表查询demo
-     *
      */
     @ApiOperation(value = "多表按条件查询demo", notes = "多表按条件查询demo")
     @GetMapping(value = "/selectListByParms")
