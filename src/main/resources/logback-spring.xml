@@ -38,10 +38,10 @@
     </appender>
 
     <!-- 生成html格式日志开始 -->
-    <appender name="HTML" class="ch.qos.logback.core.FileAppender">
-        <!-- 过滤器，只记录WARN级别的日志 -->
-        <!-- <filter class="ch.qos.logback.classic.filter.LevelFilter"> <level>info</level>
-            <onMatch>ACCEPT</onMatch> <onMismatch>DENY</onMismatch> </filter> -->
+ <!--   <appender name="HTML" class="ch.qos.logback.core.FileAppender">
+        &lt;!&ndash; 过滤器，只记录WARN级别的日志 &ndash;&gt;
+        &lt;!&ndash; <filter class="ch.qos.logback.classic.filter.LevelFilter"> <level>info</level>
+            <onMatch>ACCEPT</onMatch> <onMismatch>DENY</onMismatch> </filter> &ndash;&gt;
 
         <encoder
                 class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
@@ -50,18 +50,18 @@
             </layout>
         </encoder>
         <file>${LOG_HOME}/error-log.html</file>
-    </appender>
+    </appender>-->
     <!-- 生成html格式日志结束 -->
 
     <!-- 每天生成一个html格式的日志开始 -->
-    <appender name="FILE_HTML"
+    <!--<appender name="FILE_HTML"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy
                 class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!--日志文件输出的文件名 -->
+            &lt;!&ndash;日志文件输出的文件名 &ndash;&gt;
             <FileNamePattern>${LOG_HOME}/bluedon-api.%d{yyyy-MM-dd}.html
             </FileNamePattern>
-            <!--日志文件保留天数 -->
+            &lt;!&ndash;日志文件保留天数 &ndash;&gt;
             <MaxHistory>30</MaxHistory>
         </rollingPolicy>
         <encoder
@@ -70,12 +70,12 @@
                 <pattern>%p%d%msg%M%F{32}%L</pattern>
             </layout>
         </encoder>
-        <!--日志文件最大的大小 -->
+        &lt;!&ndash;日志文件最大的大小 &ndash;&gt;
         <triggeringPolicy
                 class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
             <MaxFileSize>10MB</MaxFileSize>
         </triggeringPolicy>
-    </appender>
+    </appender>-->
     <!-- 每天生成一个html格式的日志结束 -->
 
     <!--myibatis log configure -->
@@ -88,8 +88,8 @@
     <root level="INFO">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
-        <appender-ref ref="HTML" />
-        <appender-ref ref="FILE_HTML" />
+       <!-- <appender-ref ref="HTML" />
+        <appender-ref ref="FILE_HTML" />-->
     </root>
 
 </configuration>
