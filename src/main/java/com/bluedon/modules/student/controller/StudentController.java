@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bluedon.common.annotation.DisableAuth;
 import com.bluedon.common.constants.CommonConstant;
 import com.bluedon.common.utils.FileUtil;
+import com.bluedon.common.utils.IPUtil;
 import com.bluedon.common.utils.Result;
 import com.bluedon.modules.student.entity.StudentEntity;
 import com.bluedon.modules.student.entity.StudentVo;
@@ -137,4 +138,5 @@ public class StudentController {
     public Result upload(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return fileUtil.upload(request, response);
     }
+
 }

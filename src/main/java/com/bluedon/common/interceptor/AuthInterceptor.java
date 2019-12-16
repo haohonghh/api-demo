@@ -2,6 +2,7 @@ package com.bluedon.common.interceptor;
 
 import com.bluedon.common.annotation.DisableAuth;
 import com.bluedon.common.constants.CommonConstant;
+import com.bluedon.common.utils.IPUtil;
 import com.bluedon.common.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -43,9 +44,10 @@ public class AuthInterceptor extends BaseInterceptor {
             return false;
         }
 
-        String tokenIsExit = redisUtil.get(accessToken);
-        // 3.token不为空，判断token是否正确，与redis匹对
-        if (StringUtils.isEmpty(tokenIsExit)) {
+        // 3.判断token是否正确
+        String clientIp = IPUtil.getIP(request);
+        String token = redisUtil.hget(CommonConstant.BD_REDIS_TOKEN_KEY,clientIp);
+        if (StringUtils.isEmpty(token)||!token.equals(accessToken)) {
             setResponse(request, response, CommonConstant.BD_NO_AUTH_CODE, CommonConstant.BD_ERROR_TOKEN);
             return false;
         }

@@ -27,6 +27,9 @@ public class  CommonConstant {
 
     public static final String BD_ERROR_TOKEN = "ERROR_TOKEN";
 
+    //redis token key
+    public static final String BD_REDIS_TOKEN_KEY = "token";
+
     /**
      * 状态(0无效1有效)
      */
