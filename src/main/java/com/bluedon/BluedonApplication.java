@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 @SpringBootApplication
-@MapperScan("com.bluedon.module.*.dao")
+@MapperScan("com.bluedon.modules.*.dao")
 public class BluedonApplication {
 
     public static void main(String[] args) {

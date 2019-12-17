@@ -14,7 +14,6 @@ import java.util.List;
  * @author: hhong
  * @description: demodao
  **/
-@Mapper
 public interface DemoDao extends BaseMapper<DemoEntity> {
 
     /**
