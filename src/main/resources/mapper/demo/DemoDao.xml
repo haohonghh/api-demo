@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bluedon.modules.demo.dao.DemoDao">
+
+    <select id="selectPageVo" resultType="com.bluedon.modules.demo.entity.DemoVo">
+        select de.id,de.age,de.password,de.user_name,de.email,
+        t.test_name,t.test_no
+        from t_demo de left join t_test t on de.test_id = t.id
+    </select>
+
+    <select id="selectListByParms" resultType="com.bluedon.modules.demo.entity.DemoVo">
+        select de.id,de.age,de.password,de.user_name,de.email,
+        t.test_name,t.test_no
+        from t_demo de left join t_test t on de.test_id = t.id
+        <where>
+        1=1
+        <if test="age !=null and age != ''">
+            and de.age &gt; #{age}
+        </if>
+        <if test="userName !=null and userName != ''">
+            and de.user_name = #{userName}
+        </if>
+        </where>
+    </select>
+
+    <sql id="multDemoField">
+        de.id,de.age,de.password,de.user_name,de.email,t.test_name,t.test_no
+    </sql>
+
+    <select id="selectList" resultType="com.bluedon.modules.demo.entity.DemoVo">
+        select <include refid="multDemoField"/>
+        from t_demo de left join t_test t on de.test_id = t.id
+    </select>
+
+</mapper>

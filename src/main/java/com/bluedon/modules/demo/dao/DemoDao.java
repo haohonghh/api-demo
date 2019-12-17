@@ -1,10 +1,10 @@
-package com.bluedon.modules.student.dao;
+package com.bluedon.modules.demo.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.bluedon.modules.student.entity.StudentEntity;
-import com.bluedon.modules.student.entity.StudentVo;
+import com.bluedon.modules.demo.entity.DemoEntity;
+import com.bluedon.modules.demo.entity.DemoVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -12,10 +12,10 @@ import java.util.List;
 /**
  * @date: 2019/12/9 11:23
  * @author: hhong
- * @description: 学生dao
+ * @description: demodao
  **/
 @Mapper
-public interface StudentDao extends BaseMapper<StudentEntity> {
+public interface DemoDao extends BaseMapper<DemoEntity> {
 
     /**
      * 分页多表查询demo
@@ -23,18 +23,20 @@ public interface StudentDao extends BaseMapper<StudentEntity> {
      * @param page
      * @return
      */
-    public IPage<StudentVo> selectPageVo(Page page);
+    public IPage<DemoVo> selectPageVo(Page page);
 
     /**
      * 多表查询demo
+     *
      * @return
      */
-    public List<StudentVo> selectList();
+    public List<DemoVo> selectList();
 
     /**
      * 多表并按条件查询
+     *
      * @return
      */
-    public List<StudentVo> selectListByParms(StudentVo vo);
+    public List<DemoVo> selectListByParms(DemoVo vo);
 
 }

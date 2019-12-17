@@ -1,4 +1,4 @@
-package com.bluedon.modules.student.entity;
+package com.bluedon.modules.demo.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,8 +11,8 @@ import lombok.Data;
  * @description:
  **/
 @Data
-@ApiModel(value = "student对象", description = "student对象")
-public class StudentVo {
+@ApiModel(value = "DemoVo对象", description = "DemoVo对象")
+public class DemoVo {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,9 +31,9 @@ public class StudentVo {
     @ApiModelProperty(value = "邮箱", name = "email", example = "abcd123@qq.com")
     private String email;
 
-    @ApiModelProperty(value = "班级名称", name = "className", example = "className")
-    private String className;
+    @ApiModelProperty(value = "测试名称", name = "testName", example = "testName")
+    private String testName;
 
-    @ApiModelProperty(value = "班级编号", name = "classNo", example = "classNo")
-    private String classNo;
+    @ApiModelProperty(value = "测试编号", name = "testNo", example = "testNo")
+    private String testNo;
 }

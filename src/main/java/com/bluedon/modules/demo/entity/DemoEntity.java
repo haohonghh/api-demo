@@ -1,4 +1,4 @@
-package com.bluedon.modules.student.entity;
+package com.bluedon.modules.demo.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -18,12 +18,12 @@ import java.io.Serializable;
 /**
  * @date: 2019/12/9 11:23
  * @author: hhong
- * @description: 学生对象
+ * @description: testentity
  **/
 @Data
-@TableName("t_student")
-@ApiModel(value = "student对象", description = "用户对象student")
-public class StudentEntity implements Serializable {
+@TableName("t_demo")
+@ApiModel(value = "demo对象", description = "demo对象")
+public class DemoEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @TableId(type = IdType.UUID)
@@ -37,15 +37,15 @@ public class StudentEntity implements Serializable {
 
     @NotBlank(message = "密码不能为空")
     @Length(max = 20,message = "密码不能大于20个字符")
-    @ApiModelProperty(value = "密码", name = "password", example = "pwd123", required = true)
+    @ApiModelProperty(value = "密码", name = "password", example = "pwd123")
     private String password;
 
     @NotBlank(message = "用户名不能为空")
-    @ApiModelProperty(value = "用户名", name = "userName", example = "hhong", required = true)
+    @ApiModelProperty(value = "用户名", name = "userName", example = "hhong")
     private String userName;
 
-    @ApiModelProperty(value = "班级id", name = "classesId", example = "cc8b4c08a511aa101bae5d38ar1a6326")
-    private String classesId;
+    @ApiModelProperty(value = "testId", name = "testId", example = "cc8b4c08a511aa101bae5d38ar1a6326")
+    private String testId;
 
     @Email
     @ApiModelProperty(value = "邮箱", name = "email", example = "abcd123@qq.com")
