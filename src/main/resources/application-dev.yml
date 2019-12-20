@@ -4,7 +4,7 @@ spring:
         type: com.alibaba.druid.pool.DruidDataSource
         druid:
             driver-class-name: org.postgresql.Driver
-            url: jdbc:postgresql://172.16.110.242:5432/testdb1?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+            url: jdbc:postgresql://localhost:5432/testdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
             username: postgres
             password: root
             initial-size: 10
