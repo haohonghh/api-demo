@@ -1,7 +1,6 @@
 package com.bluedon.common.aspect;
 
-import com.bluedon.common.constants.CommonConstant;
-import com.bluedon.common.exception.RRException;
+import com.bluedon.common.exception.BDException;
 import com.bluedon.common.utils.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -34,7 +33,7 @@ public class ValidatorAspect {
                     for (ObjectError error : result.getAllErrors()) {
                         errors.add(error.getDefaultMessage());
                     }
-                    throw new RRException(Result.error(errors));
+                    throw new BDException(Result.error(errors));
                 }
             }
         }

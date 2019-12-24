@@ -1,7 +1,6 @@
 package com.bluedon.common.utils;
 
 import com.bluedon.common.constants.CommonConstant;
-import com.bluedon.common.exception.RRException;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

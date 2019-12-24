@@ -9,12 +9,12 @@ import lombok.Data;
  * @description: 自定义异常
  **/
 @Data
-public class RRException extends RuntimeException {
+public class BDException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     private Result r;
 
-    public RRException(Result r) {
+    public BDException(Result r) {
         this.r = r;
     }
 

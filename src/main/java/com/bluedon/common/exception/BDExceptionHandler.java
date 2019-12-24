@@ -16,13 +16,13 @@ import org.springframework.web.servlet.NoHandlerFoundException;
  **/
 @Slf4j
 @RestControllerAdvice
-public class RRExceptionHandler {
+public class BDExceptionHandler {
 
     /**
      * 自定义异常拦截处理
      */
-    @ExceptionHandler(RRException.class)
-    public Result<?> handleRRException(RRException e){
+    @ExceptionHandler(BDException.class)
+    public Result<?> handleRRException(BDException e){
         log.error(e.getR().getMessage());
         return e.getR();
     }

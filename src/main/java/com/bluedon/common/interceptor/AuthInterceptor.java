@@ -2,7 +2,7 @@ package com.bluedon.common.interceptor;
 
 import com.bluedon.common.annotation.DisableAuth;
 import com.bluedon.common.constants.CommonConstant;
-import com.bluedon.common.exception.RRException;
+import com.bluedon.common.exception.BDException;
 import com.bluedon.common.utils.IPUtil;
 import com.bluedon.common.utils.RedisUtil;
 import com.bluedon.common.utils.Result;
@@ -43,7 +43,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         String accessToken = getAuthToken(request);
         // token为空，直接拦截返回
         if (StringUtils.isBlank(accessToken)) {
-            throw new RRException(Result.error(CommonConstant.BD_NO_AUTH_CODE, CommonConstant.BD_TOKEN_IS_NULL));
+            throw new BDException(Result.error(CommonConstant.BD_NO_AUTH_CODE, CommonConstant.BD_TOKEN_IS_NULL));
         }
 
         // 3.判断token是否正确
@@ -51,7 +51,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         log.info("request ip>>>>>>>>>>" + clientIp);
         String token = redisUtil.hget(CommonConstant.BD_REDIS_TOKEN_KEY, clientIp);
         if (StringUtils.isEmpty(token) || !token.equals(accessToken)) {
-            throw new RRException(Result.error(CommonConstant.BD_NO_AUTH_CODE, CommonConstant.BD_TOKEN_IS_ERROR));
+            throw new BDException(Result.error(CommonConstant.BD_NO_AUTH_CODE, CommonConstant.BD_TOKEN_IS_ERROR));
         }
 
         return true;
