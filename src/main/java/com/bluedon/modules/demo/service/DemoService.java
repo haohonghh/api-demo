@@ -15,9 +15,9 @@ import java.util.List;
  **/
 public interface DemoService extends IService<DemoEntity> {
 
-    Result saveOrUpdateStu(DemoEntity entity);
+    public Result saveOrUpdateStu(DemoEntity entity);
 
-    Result deleteDemoById(String id);
+    public Result deleteDemoById(String id);
 
     public IPage<DemoVo> selectPageVo(Integer pageNo, Integer pageSize);
 
