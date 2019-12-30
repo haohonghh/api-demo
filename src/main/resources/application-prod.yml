@@ -4,7 +4,7 @@ spring:
         type: com.alibaba.druid.pool.DruidDataSource
         druid:
             driver-class-name: org.postgresql.Driver
-            url: jdbc:postgresql://172.16.110.242:5432/testdb1?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+            url: jdbc:postgresql://172.16.110.66:5432/testdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
             username: postgres
             password: root
             initial-size: 10
@@ -54,7 +54,7 @@ spring:
     mybatis-plus:
         mapper-locations: classpath*:/mapper/**/*.xml
         #实体扫描，多个package用逗号或者分号分隔
-        typeAliasesPackage: io.renren.modules.*.entity
+        typeAliasesPackage: com.bluedon.modules.*.entity
         global-config:
             #数据库相关配置
             db-config:
