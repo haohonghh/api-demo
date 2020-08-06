@@ -1,0 +1,211 @@
+package com.xxl.job.executor.util;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
+import org.apache.http.impl.nio.reactor.IOReactorConfig;
+import org.apache.http.util.EntityUtils;
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
+import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
+import org.elasticsearch.client.*;
+import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.common.xcontent.XContentType;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author: haohong
+ * @version: v1.0
+ * @description: es工具类
+ * @date:2020/03/27 15:17
+ */
+@Slf4j
+public class ESUtil {
+
+    public static String ES_USER;
+    public static String ES_PASSWORD;
+    public static String ES_IP;
+    public static String ES_PORT;
+
+
+    static {
+        ReadPropertiesUtil readPropertiesUtil = new ReadPropertiesUtil("esmanage.properties");
+        ES_USER = readPropertiesUtil.get("es.user");
+        ES_PASSWORD = readPropertiesUtil.get("es.password");
+        ES_IP = readPropertiesUtil.get("es.ip");
+        ES_PORT = readPropertiesUtil.get("es.port");
+    }
+
+
+    /*
+     * 创建索引
+     *
+     * @param index
+     * @param source
+     * @return
+     */
+    public static CreateIndexResponse createIndex(String index, String source, RestHighLevelClient restHighLevelClient) {
+        CreateIndexRequest request = new CreateIndexRequest(index);
+        request.source(source, XContentType.JSON);
+        CreateIndexResponse createIndexResponse = null;
+        try {
+            createIndexResponse = restHighLevelClient.indices().create(request, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return createIndexResponse;
+    }
+
+    /**
+     * 判断索引是否存在
+     *
+     * @param index
+     * @return
+     */
+    public static boolean existsIndex(String index, RestHighLevelClient restHighLevelClient) {
+        GetIndexRequest request = new GetIndexRequest(index);
+        boolean exists = false;
+        try {
+            exists = restHighLevelClient.indices().exists(request, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return exists;
+    }
+
+
+    /**
+     * 删除索引
+     *
+     * @param indices
+     * @param restHighLevelClient
+     * @return
+     */
+    public static AcknowledgedResponse deleteIndex(String indices, RestHighLevelClient restHighLevelClient) {
+        DeleteIndexRequest request = new DeleteIndexRequest(indices);
+        AcknowledgedResponse response = null;
+        try {
+            response = restHighLevelClient.indices().delete(request, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return response;
+    }
+
+
+    /**
+     * 通过sql查询并处理返回的json数据
+     *
+     * @param sql
+     * @return
+     * @throws IOException
+     */
+    public static List<Map<String, Object>> selectBySql(String sql, RestHighLevelClient restHighLevelClient) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        RestClient restClient = restHighLevelClient.getLowLevelClient();
+        Response response = null;
+        Request scriptRequest = new Request("POST", "/_sql?format=json");
+        scriptRequest.setJsonEntity("{ \"query\": \"" + sql + "\",\"fetch_size\": 50000 }");
+        try {
+            response = restClient.performRequest(scriptRequest);
+        } catch (IOException e) {
+            log.error("访问es出错： \n" + e);
+            return list;
+        }
+        String responseBody = null;
+        try {
+            responseBody = EntityUtils.toString(response.getEntity());
+        } catch (IOException e) {
+            log.error("解析es返回结果出错：\n", e);
+            return list;
+        }
+        JSONObject jsonObject = JSONObject.parseObject(responseBody);
+        JSONArray columns = jsonObject.getJSONArray("columns");
+        JSONArray rows = jsonObject.getJSONArray("rows");
+        int rowSize = rows.size();
+        if (rowSize > 0) {
+            for (int i = 0; i < rowSize; i++) {
+                Map<String, Object> map = new HashMap<>();
+                JSONArray rowDeatil = rows.getJSONArray(i);
+                int rowDeatilSize = rowDeatil.size();
+                for (int j = 0; j < rowDeatilSize; j++) {
+                    map.put(columns.getJSONObject(j).get("name").toString(), rowDeatil.get(j));
+                }
+                list.add(map);
+            }
+        }
+        return list;
+    }
+
+    /**
+     * 关闭客户端
+     *
+     * @param restHighLevelClient
+     */
+    public static void close(RestHighLevelClient restHighLevelClient) {
+        try {
+            restHighLevelClient.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取客户端
+     *
+     * @return
+     */
+    public static RestHighLevelClient getClient() {
+        return new RestHighLevelClient(initRestClient());
+    }
+
+
+    public static RestClientBuilder initRestClient() {
+        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(
+                AuthScope.ANY,
+                new UsernamePasswordCredentials(ES_USER, ES_PASSWORD));
+        RestClientBuilder restClientBuilder = RestClient.builder(new HttpHost(ES_IP, Integer.parseInt(ES_PORT), "http"))
+                //设置超时时间
+                .setRequestConfigCallback(
+                        requestConfigBuilder -> requestConfigBuilder
+                                .setConnectTimeout(5000)
+                                .setSocketTimeout(60000)
+                )
+                .setHttpClientConfigCallback(httpClientBuilder -> {
+                    //设置线程数
+                    HttpAsyncClientBuilder httpAsyncClientBuilder = httpClientBuilder.setDefaultIOReactorConfig(
+                            IOReactorConfig.custom()
+                                    .setIoThreadCount(1)
+                                    .build());
+                    //设置认证信息
+                    httpAsyncClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+                    return httpAsyncClientBuilder;
+                });
+        return restClientBuilder;
+    }
+
+    public static void main(String[] args) {
+        RestHighLevelClient client = ESUtil.getClient();
+        List<Map<String, Object>> list = ESUtil.selectBySql("select SrcIP, \\\"http.response.Status-Code\\\", DstIP, DstPort, http.request.Url from http_20200424 where \\\"http.response.Status-Code\\\" in (400)", client);
+        ESUtil.close(client);
+        System.out.println(JSON.toJSONString(list));
+    }
+
+}
+
