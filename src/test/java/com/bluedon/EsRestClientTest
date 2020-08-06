@@ -1,0 +1,483 @@
+package com.xxl.job.executor.test.es;
+
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.LineHandler;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import org.apache.http.util.EntityUtils;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.action.get.GetRequest;
+import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.support.WriteRequest;
+import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.action.update.UpdateResponse;
+import org.elasticsearch.client.*;
+import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.script.ScriptType;
+import org.elasticsearch.script.mustache.SearchTemplateRequest;
+import org.elasticsearch.script.mustache.SearchTemplateResponse;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
+import org.elasticsearch.search.aggregations.metrics.Avg;
+import org.elasticsearch.search.aggregations.metrics.Stats;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.fetch.subphase.FetchSourceContext;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class EsRestClientTest {
+
+    @Autowired
+    RestHighLevelClient restHighLevelClient;
+
+
+    //索引是否存在
+    @Test
+    public void test1() throws IOException {
+        GetRequest getRequest = new GetRequest("kibana_sample_data_logs", "6kRDEXEBEg8J4YT1MRmVc");
+        getRequest.fetchSourceContext(new FetchSourceContext(false));
+        getRequest.storedFields("_none_");
+        boolean getResponse = restHighLevelClient.exists(getRequest, RequestOptions.DEFAULT);
+        // restHighLevelClient.close();
+        System.out.println(getResponse);
+
+    }
+
+    //根据文本id查询
+    @Test
+    public void test() {
+        try {
+            GetRequest getRequest = new GetRequest("kibana_sample_data_logs", "6kRDEXEBEg8JYT1MRmVc");
+            GetResponse getResponse = restHighLevelClient.get(getRequest, RequestOptions.DEFAULT);
+            System.out.println(getResponse.getSourceAsString());
+            restHighLevelClient.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //根据文本id删除
+    @Test
+    public void test2() throws IOException {
+        DeleteRequest request = new DeleteRequest("kibana_sample_data_logs", "6kRDEXEBEg8JYT1MRmVc");
+        request.timeout(TimeValue.timeValueMinutes(2)); //等待主碎片作为 TimeValue 可用的超时
+        request.timeout("2m");//等待主碎片作为字符串可用的超时
+        request.setRefreshPolicy(WriteRequest.RefreshPolicy.WAIT_UNTIL); //作为 WriteRequest.RefreshPolicy 实例刷新策略
+        request.setRefreshPolicy("wait_for");//以字符串形式刷新策略
+        DeleteResponse deleteResponse = restHighLevelClient.delete(request, RequestOptions.DEFAULT);
+        System.out.println(deleteResponse.status());
+        restHighLevelClient.close();
+
+    }
+
+
+    //新增修改文档
+    @Test
+    public void test3() throws IOException {
+        UpdateRequest request = new UpdateRequest("kibana_sample_data_logs", "67RDE0EBE57J6T1MRdVc");
+        String jsonString = "{" +
+                "\"clientip\":\"1.1.0.1\"," +
+                "\"message\":\"hello world\"," +
+                "\"url\":\"http://www.baidu.com/success/lodewijk-van-den-berg\"," +
+                "\"response\":\"600\"" +
+                "}";
+        request.doc(jsonString, XContentType.JSON);
+        request.timeout(TimeValue.timeValueSeconds(1));
+        request.timeout("1s");
+        request.docAsUpsert(true);
+        UpdateResponse deleteResponse = restHighLevelClient.update(request, RequestOptions.DEFAULT);
+        System.out.println(deleteResponse.status());
+        restHighLevelClient.close();
+
+    }
+
+    //新增修改其他方式2
+    @Test
+    public void test4() throws IOException {
+        //---------1
+   /*     UpdateRequest request = new UpdateRequest("kibana_sample_data_logs","6kRDEXEBEg8JYT1MRmVc");
+        String jsonString = "{" +
+                "\"clientip\":\"0.0.0.1\"," +
+                "\"message\":\"test41241.....\"," +
+                "\"url\":\"http://www.baidu.com/success/lodewijk-van-den-berg\"," +
+                "\"response\":\"600\"" +
+                "}";
+        request.doc(jsonString, XContentType.JSON);*/
+        //---------2
+        //UpdateRequest request = new UpdateRequest("kibana_sample_data_logs","6kRDEXEBEg8JYT1MRmVc");
+        // request.doc("message","66666","url","777777","response",200,"clientip","6.8.8.6");
+        //--------3
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("message", "test");
+        jsonMap.put("dayOfWeek", 2);
+        jsonMap.put("clientip", "10.130.10.40");
+        UpdateRequest request = new UpdateRequest("kibana_sample_data_logs", "6kRAEXE2g82Y51MRm88").doc(jsonMap);
+        request.timeout(TimeValue.timeValueSeconds(1));
+        request.timeout("1s");
+        request.docAsUpsert(true);
+        UpdateResponse deleteResponse = restHighLevelClient.update(request, RequestOptions.DEFAULT);
+        System.out.println(deleteResponse.status());
+        restHighLevelClient.close();
+
+    }
+
+
+    //批量操作文档
+    @Test
+    public void test5() throws Exception {
+        BulkRequest request = new BulkRequest();
+        request.add(new IndexRequest("kibana_sample_data_logs").id("pERDE1EBEg8JYT2MR777").source(XContentType.JSON, "message", "yellow", "clientip", "10.130.10.40", "dayOfWeek", 1));
+        request.add(new IndexRequest("kibana_sample_data_logs").id("pERDE1EBEg8JYT3MR767").source(XContentType.JSON, "message", "yellow", "clientip", "10.130.10.30", "dayOfWeek", 2));
+        request.add(new IndexRequest("kibana_sample_data_logs").id("pERDE1EBEg8JYT4MR757").source(XContentType.JSON, "message", "green", "clientip", "10.130.10.10", "dayOfWeek", 3));
+        request.add(new IndexRequest("kibana_sample_data_logs").id("pERDE1EBEg8JYT6MR747").source(XContentType.JSON, "message", "green", "clientip", "10.130.10.20", "dayOfWeek", 4));
+        request.add(new IndexRequest("kibana_sample_data_logs").id("pERDE1EBEg8JYT8MR737").source(XContentType.JSON, "message", "black", "clientip", "10.130.10.80", "dayOfWeek", 5));
+        request.add(new IndexRequest("kibana_sample_data_logs").id("pERDE1EBEg8JY51MR447").source(XContentType.JSON, "message", "black", "clientip", "10.130.10.70", "dayOfWeek", 6));
+        request.add(new IndexRequest("kibana_sample_data_logs").id("pERDE1EBEg8JY61MR377").source(XContentType.JSON, "message", "white", "clientip", "10.130.10.60", "dayOfWeek", 7));
+        request.add(new IndexRequest("kibana_sample_data_logs").id("pERDE1EBEg8JY71MR277").source(XContentType.JSON, "message", "white", "clientip", "10.130.10.50", "dayOfWeek", 9));
+        request.add(new IndexRequest("kibana_sample_data_logs").id("pERDE1EBEg8JY81MR677").source(XContentType.JSON, "message", "red", "clientip", "10.130.10.10", "dayOfWeek", 18));
+        request.add(new IndexRequest("kibana_sample_data_logs").id("pERDE1EBEg8JY91MR277").source(XContentType.JSON, "message", "red", "clientip", "10.130.10.40", "dayOfWeek", 28));
+        request.add(new IndexRequest("kibana_sample_data_logs").id("pERDE1EBEg8JY11MR217").source(XContentType.JSON, "message", "pink", "clientip", "10.130.10.40", "dayOfWeek", 38));
+        request.add(new IndexRequest("kibana_sample_data_logs").id("pERDE1EBEg8J1Y1MR735").source(XContentType.JSON, "message", "pink", "clientip", "10.130.10.40", "dayOfWeek", 48));
+        request.add(new IndexRequest("kibana_sample_data_logs").id("pERDE1EBEg82YT1M4561").source(XContentType.JSON, "message", "pink", "clientip", "10.130.10.40", "dayOfWeek", 58));
+        request.add(new IndexRequest("kibana_sample_data_logs").id("pERDE1EBEgA6YT1MR777").source(XContentType.JSON, "message", "yellow", "clientip", "10.130.10.40", "dayOfWeek", 68));
+        request.add(new IndexRequest("kibana_sample_data_logs").id("pERDE1EBEgF4YT1MR777").source(XContentType.JSON, "message", "yellow", "clientip", "10.130.10.40", "dayOfWeek", 78));
+
+        BulkResponse bulkResponse = restHighLevelClient.bulk(request, RequestOptions.DEFAULT);
+        if (bulkResponse.hasFailures()) {
+            System.out.println("error");
+        } else {
+            System.out.println("success");
+        }
+        restHighLevelClient.close();
+    }
+
+
+    //*******************search api begin ****************************
+
+    //select * from xxx where clientip = '95.73.31.141' and host = 'cdn.elastic-elastic-elastic.org'
+    @Test
+    public void test6() throws Exception {
+        //  MatchQueryBuilder matchQueryBuilder = new MatchQueryBuilder("user", "kimchy");
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+       /* sourceBuilder.query(QueryBuilders.termQuery("referer", "888888888"));
+        sourceBuilder.from(0);
+        sourceBuilder.size(5);
+        sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));*/
+        MatchQueryBuilder matchQueryBuilder = new MatchQueryBuilder("host", "cdn.elastic-elastic-elastic.org");
+        MatchQueryBuilder matchQueryBuilder1 = new MatchQueryBuilder("clientip", "95.73.31.141");
+        sourceBuilder.query(matchQueryBuilder);
+        sourceBuilder.query(matchQueryBuilder1);
+        SearchRequest searchRequest = new SearchRequest("kibana_sample_data_logs");
+        searchRequest.source(sourceBuilder);
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        SearchHit[] hits = searchResponse.getHits().getHits();
+        for (SearchHit hit : hits) {
+            String sourceAsString = hit.getSourceAsString();
+            Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+            System.out.println(sourceAsString);
+            //  System.out.println(sourceAsMap);
+        }
+        restHighLevelClient.close();
+    }
+
+
+    /**
+     * 匹配查询 MatchQueryBuilder clientip = 112.106.69.227
+     * 按bytes字段升序查询
+     * from 0，to 5
+     *
+     * @throws IOException
+     */
+    @Test
+    public void test7() throws IOException {
+        SearchRequest rq = new SearchRequest();
+        //索引
+        rq.indices("kibana_sample_data_logs");
+        //各种组合条件
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        MatchQueryBuilder matchQueryBuilder = new MatchQueryBuilder("clientip", "112.106.69.227");
+        sourceBuilder.query(matchQueryBuilder);
+        sourceBuilder.sort("bytes");
+        sourceBuilder.from(0);
+        sourceBuilder.size(5);
+        rq.source(sourceBuilder);
+        //请求
+        System.out.println(rq.source().toString());
+        SearchResponse rp = restHighLevelClient.search(rq, RequestOptions.DEFAULT);
+        SearchHit[] hits = rp.getHits().getHits();
+        for (SearchHit hit : hits) {
+            String sourceAsString = hit.getSourceAsString();
+            System.out.println(sourceAsString);
+        }
+        restHighLevelClient.close();
+    }
+
+
+    //各种组合条件查询
+    @Test
+    public void test8() throws IOException {
+        //term和match_phrase都可以用于精确匹配，而match用于模糊匹配,使用term要确保字段不分词
+        SearchRequest rq = new SearchRequest();
+        //索引
+        rq.indices("kibana_sample_data_logs");
+        //各种组合条件
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        // 获取的字段（列）和不需要获取的列
+        sourceBuilder.fetchSource(new String[]{}, new String[]{"url"});
+        TermQueryBuilder matchQueryBuilder = new TermQueryBuilder("message", "hello");
+        //MatchQueryBuilder matchQueryBuilder = new MatchQueryBuilder("message","hello world");
+        //  MatchPhraseQueryBuilder matchQueryBuilder = new MatchPhraseQueryBuilder("message","hello world");
+        sourceBuilder.query(matchQueryBuilder);
+        rq.source(sourceBuilder);
+        //请求
+        System.out.println(rq.source().toString());
+        SearchResponse rp = restHighLevelClient.search(rq, RequestOptions.DEFAULT);
+        SearchHit[] hits = rp.getHits().getHits();
+        for (SearchHit hit : hits) {
+            String sourceAsString = hit.getSourceAsString();
+            System.out.println(sourceAsString);
+        }
+        restHighLevelClient.close();
+    }
+
+
+    //多字段查询
+    @Test
+    public void test9() throws IOException {
+        SearchRequest rq = new SearchRequest();
+        //索引
+        rq.indices("kibana_sample_data_logs");
+        //各种组合条件
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+        boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("message", "hello"));
+        boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("clientip", "0.0.0.1"));
+
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(boolQueryBuilder);
+        rq.source(searchSourceBuilder);
+        //请求
+        System.out.println(rq.source().toString());
+        SearchResponse rp = restHighLevelClient.search(rq, RequestOptions.DEFAULT);
+        SearchHit[] hits = rp.getHits().getHits();
+        for (SearchHit hit : hits) {
+            String sourceAsString = hit.getSourceAsString();
+            System.out.println(sourceAsString);
+        }
+        restHighLevelClient.close();
+    }
+
+    //多字段查询2
+    @Test
+    public void test10() throws IOException {
+        SearchRequest rq = new SearchRequest();
+        //索引
+        rq.indices("kibana_sample_data_logs");
+        //各种组合条件
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+        boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("message", "test"));
+        boolQueryBuilder.must(QueryBuilders.rangeQuery("dayOfWeek").gt(0).lt(4));
+
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(boolQueryBuilder);
+        rq.source(searchSourceBuilder);
+        //请求
+        System.out.println(rq.source().toString());
+        SearchResponse rp = restHighLevelClient.search(rq, RequestOptions.DEFAULT);
+        SearchHit[] hits = rp.getHits().getHits();
+        for (SearchHit hit : hits) {
+            String sourceAsString = hit.getSourceAsString();
+            System.out.println(sourceAsString);
+        }
+        restHighLevelClient.close();
+    }
+
+
+    //聚合查询  select message  as 'by_message' ,avg(dayOfWeek) as 'avg_dayOfWeek'
+    // from kibana_sample_data_logs group by by_message where clientip = '10.130.10.40'
+    @Test
+    public void test11() throws Exception {
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.indices("kibana_sample_data_logs");
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.matchPhraseQuery("clientip", "10.130.10.40"));
+        TermsAggregationBuilder aggregation = AggregationBuilders.terms("by_message").field("message.keyword");
+        aggregation.subAggregation(AggregationBuilders.avg("avg_dayOfWeek").field("dayOfWeek"));
+        searchSourceBuilder.aggregation(aggregation);
+        searchRequest.source(searchSourceBuilder);
+        System.out.println(searchRequest.source().toString());
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+
+        Aggregations aggregations = searchResponse.getAggregations();
+        Terms byCompanyAggregation = aggregations.get("by_message");
+        List<? extends Terms.Bucket> buckets = byCompanyAggregation.getBuckets();
+        for (int i = 0; i < buckets.size(); i++) {
+            Terms.Bucket bucketByKey = byCompanyAggregation.getBucketByKey(buckets.get(i).getKeyAsString());
+            Avg avg_dayOfWeek = bucketByKey.getAggregations().get("avg_dayOfWeek");
+            double value = avg_dayOfWeek.getValue();
+            System.out.println("x:" + bucketByKey.getKey());
+            System.out.println("y:" + value);
+        }
+        restHighLevelClient.close();
+    }
+
+
+    //聚合2   stats统计
+    @Test
+    public void test12() throws Exception {
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.indices("kibana_sample_data_logs");
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.matchPhraseQuery("clientip", "10.130.10.40"));
+        TermsAggregationBuilder aggregation = AggregationBuilders.terms("by_message").field("message.keyword");
+        aggregation.subAggregation(AggregationBuilders.stats("avg_dayOfWeek").field("dayOfWeek"));
+        searchSourceBuilder.aggregation(aggregation);
+        searchRequest.source(searchSourceBuilder);
+        System.out.println(searchRequest.source().toString());
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+
+
+        Aggregations aggregations = searchResponse.getAggregations();
+        Terms byCompanyAggregation = aggregations.get("by_message");
+        List<? extends Terms.Bucket> buckets = byCompanyAggregation.getBuckets();
+        for (Terms.Bucket bucket : buckets) {
+            Stats statAge = bucket.getAggregations().get("avg_dayOfWeek");
+            System.out.println(bucket.getKey()); //获取分组名称
+            System.out.println("平均值：" + statAge.getAvg());
+            System.out.println("总数：" + statAge.getSum());
+            System.out.println("最大值：" + statAge.getMaxAsString());
+            System.out.println("最小值：" + statAge.getMin());
+        }
+        restHighLevelClient.close();
+
+
+    }
+
+    //模板搜索
+    @Test
+    public void test13() throws IOException {
+        SearchTemplateRequest request = new SearchTemplateRequest();
+        request.setRequest(new SearchRequest("kibana_sample_data_logs"));
+
+        request.setScriptType(ScriptType.INLINE);
+        request.setScript(
+                "{" +
+                        "  \"query\": { \"match\" : { \"clientip\" : \"{{value}}\" } }," +
+                        "  \"size\" : \"{{size}}\"" +
+                        "}");
+
+        Map<String, Object> scriptParams = new HashMap<>();
+        scriptParams.put("value", "10.130.10.40");
+        scriptParams.put("size", 5);
+        request.setScriptParams(scriptParams);
+
+        SearchTemplateResponse response = restHighLevelClient.searchTemplate(request, RequestOptions.DEFAULT);
+
+        SearchResponse searchResponse = response.getResponse();
+
+        SearchHit[] hits = searchResponse.getHits().getHits();
+        for (SearchHit hit : hits) {
+            String sourceAsString = hit.getSourceAsString();
+            System.out.println(sourceAsString);
+        }
+        restHighLevelClient.close();
+
+    }
+
+
+    //lowlevelclient demo
+    @Test
+    public void test14() throws IOException {
+        Request scriptRequest = new Request("GET", "/kibana_sample_data_logs/_search?pretty=true");
+        scriptRequest.setJsonEntity("{\"query\":{\"match_phrase\":{\"clientip\":{\"query\":\"10.130.10.40\",\"slop\":0,\"zero_terms_query\":\"NONE\",\"boost\":1}}},\"aggregations\":{\"by_message\":{\"terms\":{\"field\":\"message.keyword\",\"size\":10,\"min_doc_count\":1,\"shard_min_doc_count\":0,\"show_term_doc_count_error\":false,\"order\":[{\"_count\":\"desc\"},{\"_key\":\"asc\"}]},\"aggregations\":{\"avg_dayOfWeek\":{\"avg\":{\"field\":\"dayOfWeek\"}}}}}}");
+        RestClient restClient = restHighLevelClient.getLowLevelClient();
+        Response response = restClient.performRequest(scriptRequest);
+        String responseBody = EntityUtils.toString(response.getEntity());
+        JSONObject entity = JSONObject.parseObject(responseBody);
+        JSONArray hists1 = ((JSONObject) entity.get("hits")).getJSONArray("hits");
+        for (int i = 0; i < hists1.size(); i++) {
+            System.out.println(hists1.getJSONObject(i).get("_source"));
+        }
+        restHighLevelClient.close();
+    }
+
+    //lowlevelclient sql demo
+    @Test
+    public void test15() throws IOException {
+        Request scriptRequest = new Request("POST", "/_sql?format=json");
+        scriptRequest.setJsonEntity("{ \"query\": \"select message as by_message,avg(dayOfWeek) as avg_dayOfWeek from kibana_sample_data_logs where clientip = '10.130.10.40' group by message order by avg_dayOfWeek\" }");
+        RestClient restClient = restHighLevelClient.getLowLevelClient();
+        Response response = restClient.performRequest(scriptRequest);
+        String responseBody = EntityUtils.toString(response.getEntity());
+        System.out.println(responseBody);
+        restHighLevelClient.close();
+    }
+
+
+    @Test
+    public void sqltest() throws IOException {
+        Request scriptRequest = new Request("POST", "/_sql?format=json");
+        scriptRequest.setJsonEntity("{ \"query\": \"select * from http_20200420 where SrcPort = 56268 limit 3\" }");
+        RestClient restClient = restHighLevelClient.getLowLevelClient();
+        Response response = restClient.performRequest(scriptRequest);
+        String responseBody = EntityUtils.toString(response.getEntity());
+        System.out.println(JSON.toJSONString(responseBody));
+        restHighLevelClient.close();
+    }
+
+    //*******************search api end ****************************
+
+
+    //ES 批量导入
+    @Test
+    public void bulkES() {
+
+        BulkRequest request = new BulkRequest();
+
+        try {
+            String fileName = "F:\\test_threat_feed\\save\\20200425-2\\newly_1day_url.json\\url-20200425day-newly.json";
+
+            IoUtil.readLines(new FileReader(fileName), new LineHandler() {
+                @Override
+                public void handle(String line) {
+                    request.add(new IndexRequest("test_threat_20200427-5").source(line, XContentType.JSON));
+                }
+            });
+
+            BulkResponse bulkresp = restHighLevelClient.bulk(request, RequestOptions.DEFAULT);
+            restHighLevelClient.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+}
